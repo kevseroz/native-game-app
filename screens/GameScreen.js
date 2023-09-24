@@ -1,9 +1,12 @@
-import { View, Text, StyleSheet, Alert } from "react-native";
+import { View, StyleSheet, Alert } from "react-native";
 import Title from "../components/Title";
 import Colors from "../constants/colors";
 import { useEffect, useState } from "react";
 import NumberContainer from "../components/NumberContainer";
 import PrimaryButton from "../components/PrimaryButton";
+import Card from "../components/Card";
+import InfoText from "../components/InfoText";
+import { Ionicons } from "@expo/vector-icons";
 
 const generateRandomBetween = (min, max, exclude) => {
   const randNumber = Math.floor(Math.random() * (max - min)) + min;
@@ -53,19 +56,23 @@ const GameScreen = ({ userNumber, onGameOver }) => {
     <View style={styles.screen}>
       <View>
         <Title title={"Opponent's Guess"} />
-        <NumberContainer>{currentGuess}</NumberContainer>
-        <Text>Higher or Lower?</Text>
-        <View>
-          <PrimaryButton onPress={() => handleNextGuess("lower")}>
-            -
-          </PrimaryButton>
-          <PrimaryButton onPress={() => handleNextGuess("higher")}>
-            +
-          </PrimaryButton>
-        </View>
-      </View>
-      <View>
-        <Text>Log Rounds</Text>
+        <Card>
+          <NumberContainer>{currentGuess}</NumberContainer>
+
+          <InfoText style={styles.textMargin}>Higher or Lower?</InfoText>
+          <View style={styles.buttonsContainer}>
+            <View style={styles.buttonContainer}>
+              <PrimaryButton onPress={() => handleNextGuess("lower")}>
+                <Ionicons name={"md-remove"} size={24} />
+              </PrimaryButton>
+            </View>
+            <View style={styles.buttonContainer}>
+              <PrimaryButton onPress={() => handleNextGuess("higher")}>
+                <Ionicons name={"md-add"} size={24} />
+              </PrimaryButton>
+            </View>
+          </View>
+        </Card>
       </View>
     </View>
   );
@@ -84,5 +91,14 @@ const styles = StyleSheet.create({
     color: Colors.primary,
     textAlign: "center",
     padding: 12,
+  },
+  buttonsContainer: {
+    flexDirection: "row",
+  },
+  buttonContainer: {
+    flex: 1,
+  },
+  textMargin: {
+    marginBottom: 18,
   },
 });
