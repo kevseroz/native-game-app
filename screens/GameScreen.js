@@ -1,4 +1,4 @@
-import { View, StyleSheet, Alert } from "react-native";
+import { View, StyleSheet, Alert, Text, FlatList } from "react-native";
 import Title from "../components/Title";
 import Colors from "../constants/colors";
 import { useEffect, useState } from "react";
@@ -23,12 +23,18 @@ let maxBoundary = 100;
 const GameScreen = ({ userNumber, onGameOver }) => {
   const initialGuess = generateRandomBetween(1, 100, userNumber);
   const [currentGuess, setCurrentGuess] = useState(initialGuess);
+  const [guessRounds, setGuessRounds] = useState([initialGuess]);
 
   useEffect(() => {
     if (currentGuess === userNumber) {
-      onGameOver();
+      onGameOver(guessRounds.length);
     }
   }, [currentGuess, userNumber, onGameOver]);
+
+  useEffect(() => {
+    minBoundary = 1;
+    maxBoundary = 100;
+  }, []);
 
   const handleNextGuess = (direction) => {
     if (
@@ -51,6 +57,7 @@ const GameScreen = ({ userNumber, onGameOver }) => {
       currentGuess
     );
     setCurrentGuess(newRandNumber);
+    setGuessRounds((prevGuess) => [newRandNumber, ...prevGuess]);
   };
   return (
     <View style={styles.screen}>
@@ -73,6 +80,19 @@ const GameScreen = ({ userNumber, onGameOver }) => {
             </View>
           </View>
         </Card>
+        <View style={styles.listContainer}>
+          <FlatList
+            data={guessRounds}
+            renderItem={(itemData) => (
+              <View style={styles.listItem}>
+                <Text style={styles.listText}>
+                  Opponent's Guess: {itemData.item}
+                </Text>
+              </View>
+            )}
+            keyExtractor={(item) => item}
+          />
+        </View>
       </View>
     </View>
   );
@@ -100,5 +120,24 @@ const styles = StyleSheet.create({
   },
   textMargin: {
     marginBottom: 18,
+  },
+  listContainer: {
+    padding: 16,
+  },
+  listItem: {
+    borderColor: Colors.primary,
+    borderWidth: 1,
+    borderRadius: 40,
+    padding: 12,
+    marginVertical: 8,
+    backgroundColor: Colors.primary,
+    elevation: 4,
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.25,
+    shadowRadius: 0.3,
+  },
+  listText: {
+    color: Colors.beige,
   },
 });

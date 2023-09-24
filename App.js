@@ -11,6 +11,7 @@ import AppLoading from "expo-app-loading";
 export default function App() {
   const [userNumber, setUserNumber] = useState(null);
   const [gameOver, setGameOver] = useState(true);
+  const [guessRounds, setGuessRounds] = useState(0);
 
   const [fontsLoaded] = useFonts({
     "open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
@@ -26,8 +27,14 @@ export default function App() {
     setGameOver(false);
   };
 
-  const handleGameOver = () => {
+  const handleGameOver = (numberOfRounds) => {
     setGameOver(true);
+    setGuessRounds(numberOfRounds);
+  };
+
+  const handleStartNewGame = () => {
+    setUserNumber(null);
+    setGuessRounds(0);
   };
 
   let screen = <StartGameScreen onConfirmNumber={handleNumberPicked} />;
@@ -36,7 +43,13 @@ export default function App() {
     screen = <GameScreen userNumber={userNumber} onGameOver={handleGameOver} />;
   }
   if (gameOver && userNumber) {
-    screen = <GameOverScreen />;
+    screen = (
+      <GameOverScreen
+        userNumber={userNumber}
+        onStartNewGame={handleStartNewGame}
+        roundsNumber={guessRounds}
+      />
+    );
   }
 
   return (
