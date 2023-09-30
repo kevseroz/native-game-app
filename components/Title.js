@@ -18,5 +18,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     margin: 32,
     borderColor: Colors.beige,
+    maxWidth: "80%",
+    width: 300,
   },
 });
